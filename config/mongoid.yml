@@ -1,0 +1,20 @@
+development:
+  clients:
+    default:
+      uri: mongodb://localhost:27017/expense_tracker_api_development
+      database: expense_tracker_api_development
+      hosts:
+        - localhost:27017
+      options:
+        log_level: :warn
+
+test:
+  clients:
+    default:
+      database: expense_tracker_api_test
+      hosts:
+        - localhost:27017
+      options:
+        read:
+          mode: :primary
+        max_pool_size: 1
