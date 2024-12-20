@@ -1,12 +1,4 @@
-class Expense
-  include Mongoid::Document
-  include Mongoid::Timestamps
-
-  field :amount, type: Float
-  field :category, type: String
-  field :description, type: String
-  field :date, type: Datetime
-
+class Expense < ApplicationRecord
   belongs_to :user
 
   CATEGORIES = %w[Groceries Leisure Electronics Utilities Clothing Health Others].freeze
