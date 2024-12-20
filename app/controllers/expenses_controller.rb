@@ -3,7 +3,7 @@ class ExpensesController < ApplicationController
 
   # GET /expenses
   def index
-    expenses = current_user.expenses
+    expenses = @current_user.expenses
     if params[:filter] == 'week'
       expenses = expenses.where(:date.gte => 1.week.ago)
     elsif params[:filter] == 'month'
@@ -18,7 +18,7 @@ class ExpensesController < ApplicationController
 
   # POST /expenses
   def create
-    expense = current_user.expenses.new(expense_params)
+    expense = @current_user.expenses.new(expense_params)
     if expense.save
       render json: expense, status: :created
     else
@@ -28,7 +28,7 @@ class ExpensesController < ApplicationController
 
   # PATCH/PUT /expenses/:id
   def update
-    expense = current_user.expenses.find(params[:id])
+    expense = @current_user.expenses.find(params[:id])
     if expense.update(expense_params)
       render json: expense
     else
@@ -38,7 +38,7 @@ class ExpensesController < ApplicationController
 
   # DELETE /expenses/:id
   def destroy
-    expense = current_user.expenses.find(params[:id])
+    expense = @current_user.expenses.find(params[:id])
     expense.destroy
     head :no_content
   end
@@ -46,6 +46,6 @@ class ExpensesController < ApplicationController
   private
 
   def expense_params
-    params.permit(:amount, :category, :description, :date)
+    params.require(:expense).permit(:amount, :category, :description, :date)
   end
 end
