@@ -5,14 +5,24 @@ class ExpensesController < ApplicationController
   def index
     expenses = @current_user.expenses
     if params[:filter] == 'week'
-      expenses = expenses.where(:date.gte => 1.week.ago)
+      expenses = expenses.where('date >= ?', 1.week.ago)
     elsif params[:filter] == 'month'
-      expenses = expenses.where(:date.gte => 1.month.ago)
+      expenses = expenses.where('date >= ?', 1.month.ago)
     elsif params[:filter] == '3months'
-      expenses = expenses.where(:date.gte => 3.months.ago)
+      expenses = expenses.where('date >= ?', 3.months.ago)
     elsif params[:start_date] && params[:end_date]
-      expenses = expenses.where(:date.gte => params[:start_date], :date.lte => params[:end_date])
+      expenses = expenses.where(date: params[:start_date]..params[:end_date])
     end
+
+    if params[:min_amount] && params[:max_amount]
+      expenses = expenses.where(amount: params[:min_amount]..params[:max_amount])
+      expenses = expenses.where(amount: params[:min_amount]..params[:max_amount])
+    elsif params[:min_amount]
+      expenses = expenses.where('amount >= ?', params[:min_amount])
+    elsif params[:max_amount]
+      expenses = expenses.where('amount <= ?', params[:max_amount])
+    end
+
     render json: expenses
   end
 
