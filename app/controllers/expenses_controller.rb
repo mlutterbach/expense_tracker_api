@@ -3,7 +3,7 @@ class ExpensesController < ApplicationController
 
   # GET /expenses
   def index
-    expenses = @current_user.expenses
+    expenses = @current_user.expenses.order(date: "desc")
     if params[:filter] == 'week'
       expenses = expenses.where('date >= ?', 1.week.ago)
     elsif params[:filter] == 'month'
@@ -25,6 +25,23 @@ class ExpensesController < ApplicationController
 
     render json: expenses
   end
+
+  # GET /monthly_by_category
+  def monthly_by_category
+    month = params[:month] || Time.current.strftime('%Y-%m')
+
+    expenses_by_month_and_category = @current_user.expenses
+                                                  .where("strftime('%Y-%m', date) = ?", month)
+                                                  .group(:category)
+                                                  .sum(:amount)
+
+  sorted_expenses = expenses_by_month_and_category.sort_by { |_category, amount| -amount }.to_h
+
+  formatted_expenses = { month => sorted_expenses }
+
+  render json: formatted_expenses
+  end
+
 
   # POST /expenses
   def create
