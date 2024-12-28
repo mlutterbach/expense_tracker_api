@@ -1,5 +1,5 @@
 class BudgetsController < ApplicationController
-  before_action :authorize_request
+  before_action :authorize
 
   def index
     budgets = @current_user.budgets.where(month: params[:month])
