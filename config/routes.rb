@@ -7,4 +7,5 @@ Rails.application.routes.draw do
       get :monthly_by_category
     end
   end
+  resources :budgets, only: [:index, :create, :update, :destroy, :show]
 end

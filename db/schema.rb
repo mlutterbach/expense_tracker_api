@@ -10,7 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_12_20_205907) do
+ActiveRecord::Schema[7.2].define(version: 2024_12_28_214746) do
+  create_table "budgets", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.decimal "amount", precision: 10, scale: 2, null: false
+    t.string "month", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "month"], name: "index_budgets_on_user_id_and_month", unique: true
+    t.index ["user_id"], name: "index_budgets_on_user_id"
+  end
+
   create_table "expenses", force: :cascade do |t|
     t.float "amount", null: false
     t.string "category", null: false
@@ -30,5 +40,6 @@ ActiveRecord::Schema[7.2].define(version: 2024_12_20_205907) do
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
+  add_foreign_key "budgets", "users"
   add_foreign_key "expenses", "users"
 end
